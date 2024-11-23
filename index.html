@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gdrive Streamer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #videoPlayer {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>GDrive Streamer</h1>
+    <input type="text" id="inputVideoLink" placeholder="Paste Google Drive video link here">
+    <button onclick="confirmStream()">Generate Stream</button>
+    <p id="output" style="margin-top: 20px; font-weight: bold;"></p>
+    <div id="videoPlayer">
+        <h2>Streaming Video</h2>
+        <iframe id="videoFrame" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        function confirmStream() {
+            const inputLink = document.getElementById("inputVideoLink").value.trim();
+            const regex = /https:\/\/drive\.google\.com\/file\/d\/([^\/]+)\/view.*/;
+            const match = inputLink.match(regex);
+
+            if (match && match[1]) {
+                const fileId = match[1];
+                const embedLink = `https://drive.google.com/file/d/${fileId}/preview`;
+                const confirmation = confirm("Do you want to stream this video?");
+                if (confirmation) {
+                    document.getElementById("videoPlayer").style.display = "block";
+                    document.getElementById("videoFrame").src = embedLink;
+                    document.getElementById("output").innerText = "Streaming now!";
+                } else {
+                    document.getElementById("output").innerText = "Streaming canceled.";
+                    document.getElementById("videoPlayer").style.display = "none";
+                }
+            } else {
+                document.getElementById("output").innerText = "Invalid Google Drive video link!";
+                document.getElementById("videoPlayer").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
